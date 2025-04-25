@@ -1,0 +1,17 @@
+name: Test Docker image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  push_to_registry:
+    name: Test Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t devcontainer-elixir-full . --no-cache --build-arg COMMIT=$(git rev-parse HEAD)
