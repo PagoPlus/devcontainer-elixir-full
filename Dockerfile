@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/universal:2-focal
+FROM mcr.microsoft.com/devcontainers/typescript-node:22-bookworm
       
 # Install docker client
 ENV DOCKER_CHANNEL stable
@@ -24,27 +24,31 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     libffi-dev \
     unzip \
     gcc \
+    sudo \
     golang \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
+# Create codespace user
+USER node
+ENV HOME /home/node
+
 # Set up Go
-ENV GOPATH=$HOME/go
-ENV PATH=$GOPATH/bin:$PATH
+ENV GOPATH $HOME/go
+ENV PATH $GOPATH/bin:$PATH
+
+# Set ASDF_DIR environment variable
+ENV ASDF_DATA_DIR=$HOME/.asdf
+ENV PATH=$ASDF_DATA_DIR/shims:$PATH
+RUN echo 'export PATH="$ASDF_DATA_DIR:$ASDF_DATA_DIR/shims:$PATH"' >> $HOME/.bashrc
+ENV PATH $ASDF_DATA_DIR:$PATH
 
 # Install asdf
 ARG ASDF_VERSION=0.16.7
-RUN go install github.com/asdf-vm/asdf/cmd/asdf@v${ASDF_VERSION}
-
-# Switch to codespace user
-RUN mkdir -p /opt/asdf
-RUN chown -R codespace:codespace /opt/asdf
-USER codespace
-
-# Set ASDF_DIR environment variable
-ENV ASDF_DATA_DIR=/opt/asdf
-ENV PATH=/opt/asdf/shims:$PATH
-RUN echo 'export PATH="/opt/asdf/shims:$PATH"' >> /home/codespace/.bashrc
+RUN mkdir -p ${ASDF_DATA_DIR} && \
+  curl -sL https://github.com/asdf-vm/asdf/releases/download/v${ASDF_VERSION}/asdf-v${ASDF_VERSION}-linux-amd64.tar.gz | \
+  tar -xzC ${ASDF_DATA_DIR}
+RUN chmod +x $ASDF_DATA_DIR/asdf
 
 # Install Erlang and Elixir via asdf
 RUN asdf plugin add erlang
