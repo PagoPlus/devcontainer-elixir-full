@@ -2,7 +2,7 @@ name: Cleanup Gitpod Environments
 
 on:
   schedule:
-    - cron: '0 14 * * 6'  # Runs at 2:00 PM UTC (14:00) every Saturday
+    - cron: '0 3 * * *'   # Runs at 3:00 AM UTC (03:00) every day
   workflow_dispatch:      # Allows manual triggering
 
 jobs:
@@ -14,3 +14,5 @@ jobs:
         with:
           GITPOD_TOKEN: ${{ secrets.GITPOD_TOKEN }}
           ORGANIZATION_ID: ${{ secrets.GITPOD_ORGANIZATION_ID }}
+          OLDER_THAN_DAYS: 7
+          PRINT_SUMMARY: true
