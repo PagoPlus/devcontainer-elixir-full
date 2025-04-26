@@ -1,0 +1,16 @@
+name: Cleanup Gitpod Environments
+
+on:
+  schedule:
+    - cron: '0 14 * * 6'  # Runs at 2:00 PM UTC (14:00) every Saturday
+  workflow_dispatch:      # Allows manual triggering
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cleanup Old Environments
+        uses: Siddhant-K-code/cleanup-gitpod-environments@v1.1
+        with:
+          GITPOD_TOKEN: ${{ secrets.GITPOD_TOKEN }}
+          ORGANIZATION_ID: ${{ secrets.GITPOD_ORGANIZATION_ID }}
