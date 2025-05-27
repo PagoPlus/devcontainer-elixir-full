@@ -54,6 +54,6 @@ RUN chmod +x $ASDF_DATA_DIR/asdf
 RUN asdf plugin add erlang
 RUN asdf plugin add elixir
 RUN asdf install erlang 27.2
-RUN asdf install elixir 1.18.0-otp-27
+RUN asdf install elixir 1.18.1-otp-27
 # RUN asdf set erlang 27.2
 # RUN asdf set elixir 1.18.0-otp-27
